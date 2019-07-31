@@ -13,10 +13,6 @@ extend type Mutation {
     createUser(userInput: UserCreateInput!) : User!
 }
 
-extend type Subscription {
-    """ Subscribe to all new users. """
-    userAdded: User!
-}
 
 type Address {
     street_name: String!

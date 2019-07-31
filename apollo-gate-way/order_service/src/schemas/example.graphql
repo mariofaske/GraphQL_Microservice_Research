@@ -1,0 +1,110 @@
+scalar DateTime
+
+extend type Query {
+    """ Returns all products. They can be filtered by a producer. """
+    getOrders: [Order!]
+
+    """ Returns the specified product if found. """
+    getOrder(orderId: ID!): Order
+}
+
+extend type Mutation {
+    """ Creates a new Product for a producer. """
+    createOrder(orderInput: CreateOrderInput!) : Order!
+}
+
+input CreateOrderInput {
+    consumer: ConsumerInput!
+    products: [ProductInput!]!
+    total:Float!
+	receiptAddress: AddressInput!
+	pickupId: ID!
+	pickupDeadline: DateTime!
+	orderStatus: [OrderStatusInput!]!
+    paymentMethod: PaymentMethod!
+}
+
+input AddressInput {
+    street_name: String!
+    street_number: String!
+    city: String!
+    zip_code: Int!
+    country: String!
+}
+
+input ProductInput{
+    id: ID!
+    producerId: ID!
+    name: String!
+    amount: Float!
+    tax: Float!
+    price: Float!
+}
+
+input ConsumerInput{
+    consumerId: ID!
+}
+
+input OrderStatusInput{
+    status: Status!
+    data: DateTime!
+}
+
+
+type Order @key(fields: "id"){
+    id: ID!
+    consumer: Consumer! @provides(fields: "username")
+    products: [OrderedProduct!]!
+    total:Float!
+	receiptAddress: Address!
+	pickupId: ID!
+	pickupDeadline: DateTime!
+	date: DateTime!
+	orderStatus: [OrderStatus!]!
+    paymentMethod: PaymentMethod!
+}
+
+type OrderStatus{
+    status: Status!
+    date: DateTime!
+}
+
+type Address {
+    street_name: String!
+    street_number: String!
+    city: String!
+    zip_code: Int!
+    country: String!
+}
+
+
+enum Status {
+	ORDERED
+	PROCESSING
+	PAID
+	READY_NOTPAID
+	READY
+	CANCELED
+	CLOSED
+}
+
+enum PaymentMethod {
+	PAYPAL
+	CREDIT_CARD
+	BANK_TRANSFER
+	CASH
+}
+
+type OrderedProduct{
+    productId: ID!
+    producerId: ID!
+    productName: String!
+    amount: Float!
+    tax: Float!
+    price: Float!
+}
+
+extend type Consumer @key(fields: "id") {
+  id: ID! @external
+  username: String! @external
+}

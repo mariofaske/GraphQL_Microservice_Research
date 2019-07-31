@@ -13,11 +13,6 @@ extend type Mutation {
     createProduct(producerId: ID!, productInput: ProductCreateInput!) : Product!
 }
 
-extend type Subscription {
-    """ Subscribe to all new users. """
-    productAdded(producerId: ID!) : Product!
-}
-
 type Product @key(fields: "id"){
     id: ID!
     name: String!
