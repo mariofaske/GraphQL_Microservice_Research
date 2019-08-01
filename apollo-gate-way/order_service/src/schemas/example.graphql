@@ -6,22 +6,64 @@ extend type Query {
 
     """ Returns the specified product if found. """
     getOrder(orderId: ID!): Order
+
+    getOrdersByConsumer(consumerId: ID!): Order
+
+    getOrdersByProducer(producerId: ID!): Order
+
+    getBill(orderId: ID!): Bill
 }
 
 extend type Mutation {
     """ Creates a new Product for a producer. """
     createOrder(orderInput: CreateOrderInput!) : Order!
+
+    changeOrderStatus(statusInput: ChangeStatusInput!): Order!
+}
+
+input ChangeStatusInput{
+    orderId: ID!,
+    orderStatus: OrderStatusInput!
 }
 
 input CreateOrderInput {
     consumer: ConsumerInput!
+    producer: ProducerInput!
     products: [ProductInput!]!
     total:Float!
-	receiptAddress: AddressInput!
-	pickupId: ID!
-	pickupDeadline: DateTime!
-	orderStatus: [OrderStatusInput!]!
+    pickupStation: PickupStationInput!
+    date: DateTime!
+	orderStatus: OrderStatusInput!
     paymentMethod: PaymentMethod!
+    bill: BillInput!
+}
+
+input PickupStationInput {
+    locationId: ID!
+	pickupDeadline: DateTime!
+	name: String!
+	pickupType: PickupType!
+	address: AddressInput!
+	openingHours: OpeningHoursInput!
+}
+
+input OpeningHoursInput{
+    is_closed: Boolean!
+    start: DateTime
+    end: DateTime
+}
+
+input BillInput {
+    consumerAddress: AddressInput!
+	producerAddress: AddressInput!
+	billNumber: Float!
+	issueDate: DateTime!
+	dueDate: DateTime!
+	total: Float!
+	products: [ProductInput!]!
+	shippingPrice: Float!
+	tax: Float!
+	taxId: String
 }
 
 input AddressInput {
@@ -34,7 +76,6 @@ input AddressInput {
 
 input ProductInput{
     id: ID!
-    producerId: ID!
     name: String!
     amount: Float!
     tax: Float!
@@ -43,6 +84,10 @@ input ProductInput{
 
 input ConsumerInput{
     consumerId: ID!
+}
+
+input ProducerInput{
+    producerId: ID!
 }
 
 input OrderStatusInput{
@@ -54,14 +99,14 @@ input OrderStatusInput{
 type Order @key(fields: "id"){
     id: ID!
     consumer: Consumer! @provides(fields: "username")
+    producer: Producer! @provides(fields: "username")
     products: [OrderedProduct!]!
     total:Float!
-	receiptAddress: Address!
-	pickupId: ID!
-	pickupDeadline: DateTime!
+	pickupStation: PickupStation!
 	date: DateTime!
 	orderStatus: [OrderStatus!]!
     paymentMethod: PaymentMethod!
+    bill: Bill!
 }
 
 type OrderStatus{
@@ -95,16 +140,55 @@ enum PaymentMethod {
 	CASH
 }
 
+enum PickupType {
+	PRODUCER
+	BIO_STORE
+	RETAIL_STORE
+	WAREHOUSE
+}
+
+type OpeningHours{
+    is_closed: Boolean!
+    start: DateTime
+    end: DateTime
+}
+
 type OrderedProduct{
     productId: ID!
-    producerId: ID!
     productName: String!
     amount: Float!
     tax: Float!
     price: Float!
 }
 
+type Bill {
+	consumerAddress: Address!
+	producerAddress: Address!
+	billNumber: Float!
+	issueDate: DateTime!
+	dueDate: DateTime!
+	total: Float!
+	products: [OrderedProduct!]!
+	shippingPrice: Float!
+	tax: Float!
+	taxId: String
+}
+
+type PickupStation {
+	locationId: ID!
+	pickupDeadline: DateTime!
+	name: String!
+	pickupType: PickupType!
+	address: Address!
+	openingHours: OpeningHours!
+}
+
 extend type Consumer @key(fields: "id") {
+  id: ID! @external
+  username: String! @external
+}
+
+extend type Producer @key(fields: "id") {
   id: ID! @external
   username: String! @external
 }

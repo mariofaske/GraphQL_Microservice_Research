@@ -1,6 +1,6 @@
 // const { withFilter } = require('graphql-yoga')
 
-const Unit = require('../utils/enums/Unit')
+// const Unit = require('../utils/enums/Unit')
 // const Channels = require('../utils/enums/ChannelNames')
 
 // const productDB = require('../utils/databases/product.db')
@@ -13,7 +13,19 @@ module.exports = {
       const products = order
       return (products.length > 0) ? products : null
     },
-    getOrder: (_parent, args, _context, _info) => order[0],
+    getOrder: (_parent, args, _context, _info) => order[order.length - 1],
+
+    getOrdersByConsumer: (_parent, args, _context, _info) => {
+
+    },
+
+    getOrdersByProducer: (_parent, args, _context, _info) => {
+
+    },
+
+    getBill: (_parent, args, _context, _info) => {
+
+    },
   },
   Mutation: {
     createOrder: (_parent, args, _context, _info) => {
@@ -23,10 +35,5 @@ module.exports = {
 
       return order[0]
     },
-  },
-  Unit: {
-    QUANTITY: Unit.QUANTITY,
-    KILOGRAM: Unit.KILOGRAM,
-    LITER: Unit.LITER,
   },
 }
