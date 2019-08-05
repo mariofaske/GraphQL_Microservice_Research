@@ -1,0 +1,20 @@
+extend type Query {
+    processMedia(processMediaInput: ProcessMediaInput!): Media
+}
+
+extend type Mutation {
+    deleteMedia(deleteMediaInput: DeleteMediaInput!): Media
+}
+
+type Media {
+    mediaURLs: [String!]!
+}
+
+input ProcessMediaInput {
+    name: String!
+    media: String!
+}
+
+input DeleteMediaInput {
+    mediaURLs: [String!]!
+}
