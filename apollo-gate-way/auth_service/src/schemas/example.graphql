@@ -1,0 +1,25 @@
+extend type Query {
+    authenticateAccount(AccountInput: AccountInput) : Account
+}
+
+extend type Mutation {
+    createAccount(AccountInputWithId: AccountInputWithId): Account
+    modifyPassword(AccountInputWithId: AccountInputWithId): Account
+}
+
+type Account {
+    accountId: ID!
+    email: String!
+    password: String!
+}
+
+input AccountInput {
+    email: String!
+    password: String!
+}
+
+input AccountInputWithId {
+    accountId: ID!
+    email: String!
+    password: String!
+}

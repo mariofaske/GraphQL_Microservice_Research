@@ -9,6 +9,7 @@ const gateway = new ApolloGateway({
     { name: 'account', url: 'http://localhost:3001' },
     { name: 'products', url: 'http://localhost:3002' },
     { name: 'orders', url: 'http://localhost:3003' },
+    { name: 'auth', url: 'http://localhost:3004' },
   ],
 });
 
