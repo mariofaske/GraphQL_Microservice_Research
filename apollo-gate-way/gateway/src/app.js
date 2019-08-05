@@ -6,7 +6,7 @@ const config = require('../config')
 
 const gateway = new ApolloGateway({
   serviceList: [
-    { name: 'users', url: 'http://localhost:3001' },
+    { name: 'account', url: 'http://localhost:3001' },
     { name: 'products', url: 'http://localhost:3002' },
     { name: 'orders', url: 'http://localhost:3003' },
   ],

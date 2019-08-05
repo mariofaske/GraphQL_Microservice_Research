@@ -1,0 +1,171 @@
+scalar DateTime
+
+extend type Query {
+    """ Returns all registered users. """
+    getAccounts: [Account!]
+
+    """ If found, returns the user with the specified id. """
+    getAccount(id: ID!): Account
+}
+
+extend type Mutation {
+    #""" Creates a new User. """
+   # createAccount(userInput: CreateAccountInput!) : Account!
+
+   deleteAccount(id: ID!): Account
+    
+   """ All Mutations on Consumer """
+    createConsumer(consumerInput: CreateConsumerInput!): Consumer!
+
+    editConsumer(consumerInput: EditConsumerInput!): Consumer!
+
+
+   
+   """ All Mutations on Producer """
+    createProducer(producerInput: CreateProducerInput!): Producer!
+
+    editProducer(consumerInput: EditProducerInput!): Producer!
+}
+
+
+type Address {
+    street_name: String!
+    street_number: String!
+    city: String!
+    zip_code: Int!
+    country: String!
+}
+
+input AddressCreateInput {
+    street_name: String!
+    street_number: String!
+    city: String!
+    zip_code: Int!
+    country: String!
+}
+
+interface Account @key(fields: "id") {
+    id: ID!
+    member_since: DateTime!
+    name: String!
+    surname: String!
+    email: String!
+    address: Address!
+    type: UserType!
+}
+
+""" A user of this platform that is only allowed to buy products. """
+type Consumer implements Account @key(fields: "id") {
+    id: ID!
+    member_since: DateTime!
+    name: String!
+    surname: String!
+    email: String!
+    address: Address!
+    type: UserType!
+    preferedPickupStation: PickupStation
+    preferedPaymentMethod: PaymentMethod
+}
+
+""" A user of this platform that is allowed to buy and sell products. """
+type Producer implements Account @key(fields: "id") {
+    id: ID!
+    member_since: DateTime!
+    name: String!
+    surname: String!
+    email: String!
+    address: Address!
+    type: UserType!
+    taxId: String!
+    producerProfile: ProducerProfile!
+}
+
+type ProducerProfile{
+    producerProfileId: ID!
+	name: String!
+	address: Address!
+    media: [Media!]
+	publicEmail: String
+	telephone: [Int!]
+	openingHours: OpeningHours
+	visitPossible: Boolean
+	averageRating: Float
+    AcceptedPaymentMethods: [PaymentMethod!]!
+}
+
+type Media{
+    path: String!
+    contentType: String!
+}
+
+type OpeningHours{
+    is_closed: Boolean!
+    start: DateTime
+    end: DateTime
+}
+
+enum UserType {
+    PRODUCER
+    CONSUMER
+}
+
+enum PaymentMethod {
+	PAYPAL
+	CREDIT_CARD
+	BANK_TRANSFER
+	CASH
+}
+
+enum PickupType {
+	PRODUCER
+	BIO_STORE
+	RETAIL_STORE
+	WAREHOUSE
+}
+
+input CreateProducerInput {
+    name: String!
+    surname: String!
+    password: String!
+    email: String!
+    address: AddressCreateInput!
+    type: UserType!
+}
+
+input CreateConsumerInput {
+    name: String!
+    surname: String!
+    password: String!
+    email: String!
+    address: AddressCreateInput!
+    type: UserType!
+}
+input EditConsumerInput {
+    name: String!
+    surname: String!
+    password: String!
+    email: String!
+    address: AddressCreateInput!
+    type: UserType!
+}
+input EditProducerInput {
+    name: String!
+    surname: String!
+    password: String!
+    email: String!
+    address: AddressCreateInput!
+    type: UserType!
+}
+
+type PickupStation {
+	locationId: ID!
+	pickupDeadline: DateTime!
+	name: String!
+	pickupType: PickupType!
+	address: Address!
+	openingHours: OpeningHours!
+}
+
+extend type Product @key(fields: "id") {
+  id: ID! @external
+}
