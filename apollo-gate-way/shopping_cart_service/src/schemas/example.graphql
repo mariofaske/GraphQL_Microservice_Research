@@ -1,0 +1,45 @@
+extend type Query {
+    getShoppingCartByConsumer(getShoppingCartByConsumerInput: GetShoppingCartByConsumerInput!): ShoppingCart
+}
+
+extend type Mutation {
+    createShoppingCart(editShoppingCartInput: EditShoppingCartInput!): ShoppingCart!
+
+    addProduct(editShoppingCartProductsInput: EditShoppingCartProductsInput!): ShoppingCart!
+
+    removeProduct(editShoppingCartProductsInput: EditShoppingCartProductsInput!): ShoppingCart!
+
+    modifyProductAmount(editShoppingCartProductsInput: EditShoppingCartProductsInput!): ShoppingCart!
+
+    emptyShoppingCart(editShoppingCartInput: EditShoppingCartInput!): ShoppingCart
+
+    removeShoppingCart(editShoppingCartInput: EditShoppingCartInput!): ShoppingCart
+}
+
+type ShoppingCart {
+    consumerId: ID!
+    product: [ShoppingCartProduct!]
+}
+
+type ShoppingCartProduct {
+    productId: ID!
+    productName: String!
+    amount: Float!
+    price: Float!
+    tax: Float!
+    image: String!
+}
+
+input GetShoppingCartByConsumerInput {
+    consumerId: ID!
+}
+
+input EditShoppingCartInput {
+    consumerId: ID!
+}
+
+input EditShoppingCartProductsInput {
+    consumerId: ID!
+    productId: ID!
+    amount: Float!
+}

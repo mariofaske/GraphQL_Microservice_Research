@@ -12,6 +12,7 @@ const gateway = new ApolloGateway({
     { name: 'auth', url: 'http://localhost:3004' },
     { name: 'media', url: 'http://localhost:3005' },
     { name: 'product_template', url: 'http://localhost:3006' },
+    { name: 'shopping_cart', url: 'http://localhost:3007' },
   ],
 });
 
