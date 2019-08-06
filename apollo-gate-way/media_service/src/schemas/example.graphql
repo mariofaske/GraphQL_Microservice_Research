@@ -8,11 +8,13 @@ extend type Mutation {
 
 type Media {
     mediaURLs: [String!]!
+    contentType: String!
 }
 
 input ProcessMediaInput {
     name: String!
     media: String!
+    contentType: String!
 }
 
 input DeleteMediaInput {

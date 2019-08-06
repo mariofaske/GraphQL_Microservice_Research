@@ -19,7 +19,7 @@ extend type Mutation {
     deleteProduct(productId: ID!) : Product
 }
 
-type Product @key(fields: "id"){
+type Product @key(fields: "productId"){
 	productId: ID!
 	producerId: ID!
 	createdAt: DateTime!

@@ -1,13 +1,13 @@
 extend type Query {
-    authenticateAccount(AccountInput: AccountInput) : Account
+    authenticateAccount(AccountInput: AccountInput) : AuthAccount
 }
 
 extend type Mutation {
-    createAccount(AccountInputWithId: AccountInputWithId): Account
-    modifyPassword(AccountInputWithId: AccountInputWithId): Account
+    createAccount(AccountInputWithId: AccountInputWithId): AuthAccount
+    modifyPassword(AccountInputWithId: AccountInputWithId): AuthAccount
 }
 
-type Account {
+type AuthAccount {
     accountId: ID!
     email: String!
     password: String!

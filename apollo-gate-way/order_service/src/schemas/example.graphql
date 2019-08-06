@@ -185,10 +185,8 @@ type PickupStation {
 
 extend type Consumer @key(fields: "id") {
   id: ID! @external
-  username: String! @external
 }
 
 extend type Producer @key(fields: "id") {
   id: ID! @external
-  username: String! @external
 }

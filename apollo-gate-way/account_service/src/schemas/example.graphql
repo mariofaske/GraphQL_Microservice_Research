@@ -84,7 +84,7 @@ type ProducerProfile{
     producerProfileId: ID!
 	name: String!
 	address: Address!
-    media: [Media!]
+    accountMedia: [AccountMedia!]
 	publicEmail: String
 	telephone: [Int!]
 	openingHours: OpeningHours
@@ -93,7 +93,7 @@ type ProducerProfile{
     AcceptedPaymentMethods: [PaymentMethod!]!
 }
 
-type Media{
+type AccountMedia{
     path: String!
     contentType: String!
 }
@@ -166,6 +166,6 @@ type PickupStation {
 	openingHours: OpeningHours!
 }
 
-extend type Product @key(fields: "id") {
-  id: ID! @external
+extend type Product @key(fields: "productId") {
+  productId: ID! @external
 }
