@@ -1,8 +1,10 @@
+scalar DateTime
+
 extend type Query {
     """ Returns all products. They can be filtered by a producer. """
-    getProducts(producerId: ID): [Product!]
+    getAllProducts: [Product!]
 
-    getProductsBoughtBy(userId: ID!): [Product!]
+    getProductsFromProducer(producerId: ID!): [Product!]
 
     """ Returns the specified product if found. """
     getProduct(productId: ID!): Product
@@ -10,16 +12,45 @@ extend type Query {
 
 extend type Mutation {
     """ Creates a new Product for a producer. """
-    createProduct(producerId: ID!, productInput: ProductCreateInput!) : Product!
+    createProduct(producerId: ID!, productInput: CreateProductInput!) : Product!
+
+    editProduct(productId: ID!, productInput: EditProductInput!) : Product
+
+    deleteProduct(productId: ID!) : Product
 }
 
 type Product @key(fields: "id"){
-    id: ID!
-    name: String!
-    unit: Unit!
-    price_per_unit: Float!
-    description: String
-    producer: Producer! @provides(fields: "username")
+	productId: ID!
+	producerId: ID!
+	createdAt: DateTime!
+    isPublic: Boolean!
+	name: String!
+	description: String!
+	longDescription: String!
+	offerTypes: [OfferType!]!
+	brand: String
+	category: Category
+	allergen: [Allergen!]
+	additive: [Additive!]
+	foodSafety: [FoodSafety!]
+	color: String
+	packaging: Packaging
+	condition: Condition
+	rating: Float!
+    images: [Image!]
+}
+
+type Image{
+	name: String!
+	resolutions: [String!]
+}
+
+type OfferType {
+	price: Float!
+    amount: Float!
+	unit: Unit
+	tax: Float!
+	discount: Float!
 }
 
 input ProductQueryInput {
@@ -28,11 +59,98 @@ input ProductQueryInput {
     producerId: ID
 }
 
-input ProductCreateInput {
+input CreateProductInput {
+    isPublic: Boolean!
     name: String!
-    unit: Unit!
-    price_per_unit: Float!
-    description: String
+	description: String!
+	longDescription: String!
+	offerTypes: [OfferTypeInput!]!
+	brand: String
+	category: Category
+	allergen: [Allergen!]
+	additive: [Additive!]
+	foodSafety: [FoodSafety!]
+	color: String
+	packaging: Packaging
+	condition: Condition
+    images: [ImageInput!]
+}
+
+input EditProductInput {
+    isPublic: Boolean
+    name: String
+	description: String
+	longDescription: String
+	offerTypes: [OfferTypeInput!]
+	brand: String
+	category: Category
+	allergen: [Allergen!]
+	additive: [Additive!]
+	foodSafety: [FoodSafety!]
+	color: String
+	packaging: Packaging
+	condition: Condition
+    images: [ImageInput!]
+}
+
+input OfferTypeInput{
+    price: Float!
+    amount: Float!
+	unit: Unit
+	tax: Float!
+	discount: Float!
+}
+
+input ImageInput{
+    name: String!
+	resolutions: [String!]
+}
+
+enum Packaging {
+	PLASTIC
+	PAPER
+}
+
+enum Condition {
+	MOIST
+	FROZEN
+	COOLED
+	DRIED
+	RTP
+	RIPE
+	RAW
+	FERMENTED
+}
+
+enum Allergen {
+	GLUTEN
+	CRUSTACEAN
+	EGG
+	FISH
+	PEANUTS
+	SOYBEAN
+	MILK
+	LACTOSE
+	NUT
+	CELERY
+	MUSTARD
+	SESAME_SEEDS
+	SULFUR_DIOXIDE
+	SULFITE
+	LUPIN
+}
+
+enum Additive {
+	DYE
+	PRESERVATIVE
+	ANTIOXIDANT
+	FLAVOUR_ENHANCER
+	SULFURED
+	BLACKENED
+	WAXED
+	PHOSPHATE
+	SWEETENER
+	PHENYLALANINE
 }
 
 enum Unit {
@@ -41,8 +159,49 @@ enum Unit {
     KILOGRAM
 }
 
-extend type Producer @key(fields: "id") {
-  id: ID! @external
-  username: String! @external
-  products: [Product!] @requires(fields: "username")
+enum Category {
+	CEREAL
+	CEREAL_PRODUCTS
+	POTATO
+	POTATO_PRODUCTS
+	FRUIT
+	FRUIT_PRODUCTS
+	DRIED_FRUIT
+	VEGETABLES
+	PULSES
+	NUTS
+	SEEDS
+	MEAT
+	MEAT_PRODUCTS
+	FISH
+	FISH_PRODUCTS
+	MILK
+	DAIRY_PRODUCTS
+	EGG
+	EGG_DISHES
+	OILS
+	FATS
+	CONFECTIONERY
+	SUGAR
+	PRESERVES
+	READY_MEALS
+	SAUCES
+	SEASONINGS
+	SPICES
+	HERBS
+	NON_ALCOHOLIC
+	ALCOHOLIC
 }
+
+enum FoodSafety {
+	ALCOHOL
+	GELATIN
+	PORK
+	MEATLESS
+}
+
+#extend type Producer @key(fields: "id") {
+#  id: ID! @external
+#  username: String! @external
+#  products: [Product!] @requires(fields: "username")
+#}

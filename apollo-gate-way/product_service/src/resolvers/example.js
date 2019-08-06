@@ -1,48 +1,34 @@
-const { withFilter } = require('graphql-yoga')
-
+// const { withFilter } = require('graphql-yoga')
 const Unit = require('../utils/enums/Unit')
-const Channels = require('../utils/enums/ChannelNames')
-
+// const Channels = require('../utils/enums/ChannelNames')
 const productDB = require('../utils/databases/product.db')
 
+const products = []
 module.exports = {
   Query: {
-    getProducts: (_parent, args, _context, _info) => {
+    getAllProducts: (_parent, _args, _context, _info) => products,
+    getProductsFromProducer: (_parent, args, _context, _info) => {
       const { producerId } = args
-      const products = productDB.getProductsMatchingQuery({ producerId })
-      return (products.length > 0) ? products : null
-    },
-    getProductsBoughtBy: (_parent, args, _context, _info) => {
-      const { userId } = args
-      const products = productDB.getProductsBoughtBy(userId)
-      return (products.length > 0) ? products : null
+      const productIdx = products.findIndex(product => products.producerId === producerId)
+
+      return (productIdx >= 0) ? products[productIdx] : null
     },
     getProduct: (_parent, args, _context, _info) => {
-      const { productId } = args
-      return productDB.getProductById(productId)
+      const { producerId } = args
+      const productIdx = products.findIndex(product => products.producerId === producerId)
+
+      return (productIdx >= 0) ? products[productIdx] : null
     },
   },
   Mutation: {
     createProduct: (_parent, args, context, _info) => {
       const { producerId, productInput } = args
-      const { pubsub } = context
 
-      const product = productDB.createProductForProducer(producerId, productInput)
+      productInput.producerId = producerId
 
-      pubsub.publish(Channels.PRODUCT_ADDED_CHANNEL, { productAdded: product })
+      products.push(productInput)
 
-      return product
-    },
-  },
-  Subscription: {
-    productAdded: {
-      subscribe: withFilter(
-        (_parent, _args, context, _info) => {
-          const { pubsub } = context
-          return pubsub.asyncIterator(Channels.PRODUCT_ADDED_CHANNEL)
-        },
-        (payload, variables) => payload.productAdded.producerId === variables.producerId,
-      ),
+      return products[products.length - 1]
     },
   },
   Product: {
@@ -55,12 +41,5 @@ module.exports = {
     QUANTITY: Unit.QUANTITY,
     KILOGRAM: Unit.KILOGRAM,
     LITER: Unit.LITER,
-  },
-  Producer: {
-    products: (producer) => {
-      const { id, username } = producer
-      const products = productDB.getProductsMatchingQuery({ producerId: id })
-      return products.map(product => ({ ...product, name: `${username}_${product.name}` }))
-    },
   },
 }
