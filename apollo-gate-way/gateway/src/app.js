@@ -2,7 +2,16 @@ require('dotenv').config()
 
 const { ApolloServer } = require('apollo-server')
 const { ApolloGateway } = require('@apollo/gateway')
+const http = require('http')
+const faye = require('faye')
 const config = require('../config')
+
+const fayeServer = http.createServer()
+const bayeux = new faye.NodeAdapter({ mount: '/' })
+
+bayeux.attach(fayeServer)
+fayeServer.listen(8000)
+
 
 const gateway = new ApolloGateway({
   serviceList: [
