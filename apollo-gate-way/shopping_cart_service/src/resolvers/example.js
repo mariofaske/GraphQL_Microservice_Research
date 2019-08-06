@@ -1,4 +1,4 @@
-const shoppingcarts = []
+const shoppingCarts = []
 
 module.exports = {
   Query: {

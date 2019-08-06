@@ -7,23 +7,23 @@ module.exports = {
       return (templates.length > 0) ? templates : null
     },
     getTemplatesByProduct: (_parent, args, _context, _info) => {
-      const { GetTemplatesByProductInput } = args
+      const { getTemplatesByProductInput } = args
       return (templates.length > 0) ? templates[0] : null
     },
     getTemplatesByProducer: (_parent, args, _context, _info) => {
-      const { GetTemplatesByProducerInput } = args
+      const { getTemplatesByProducerInput } = args
       return (templates.length > 0) ? templates[0] : null
     }
   },
   Mutation: {
     createTemplate: (_parent, args, _context, _info) => {
-      const { CreateTemplateInput } = args
-      templates.push(CreateTemplateInput)
+      const { createTemplateInput } = args      
+      templates.push(createTemplateInput)
       return templates[0]
     },
     updateTemplate: (_parent, args, _context, _info) => {
-      const { UpdateTemplateInput } = args
-      templates.push(UpdateTemplateInput)
+      const { updateTemplateInput } = args
+      templates.push(updateTemplateInput)
       return templates[0]
     }
   },
