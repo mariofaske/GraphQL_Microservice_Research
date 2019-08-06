@@ -1,0 +1,44 @@
+extend type Query {
+    getTemplates: [Template!]
+
+    getTemplatesByProduct(getTemplatesByProductInput: GetTemplatesByProductInput!): [Template!]
+
+    getTemplatesByProducer(getTemplatesByProducerInput: GetTemplatesByProducerInput!): [Template!]
+}
+
+extend type Mutation {
+    createTemplate(createTemplateInput: CreateTemplateInput!): Template!
+
+    updateTemplate(updateTemplateInput: UpdateTemplateInput!): Template!
+}
+
+type Template {
+    producerId: ID!
+    isPublic: Boolean!
+    title: String!
+    description: String!
+    img: String!
+}
+
+input GetTemplatesByProductInput{
+    title: String!
+}
+
+input GetTemplatesByProducerInput{
+    producerId: ID!
+}
+
+input CreateTemplateInput{
+    producerId: ID!
+    isPublic: Boolean!
+    title: String!
+    description: String!
+    img: String!
+}
+
+input UpdateTemplateInput{
+    isPublic: Boolean
+    title: String
+    description: String
+    img: String
+}
